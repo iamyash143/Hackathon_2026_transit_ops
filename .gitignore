@@ -4,6 +4,7 @@
 __pycache__/
 *.py[cod]
 *.sqlite3
+media/
 node_modules/
 staticfiles/
 
@@ -12,3 +13,6 @@ staticfiles/
 * 3.py
 * 2.txt
 * 3.txt
+* 2.pdf
+* 2.json
+* 3.json
