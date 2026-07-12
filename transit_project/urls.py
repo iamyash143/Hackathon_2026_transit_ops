@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponseNotFound
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from core import views as core_views
 
@@ -14,6 +15,7 @@ def unavailable_feature(request):
     return HttpResponseNotFound('This feature is not available yet.')
 
 urlpatterns = [
+    path('', RedirectView.as_view(pattern_name='dashboard:home', permanent=False), name='home'),
     path('admin/', admin.site.urls),
     path('documents/', include('documents.urls', namespace='documents')),
     path('vehicles/', include('fleet.urls', namespace='fleet')),

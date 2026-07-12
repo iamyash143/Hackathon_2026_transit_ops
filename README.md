@@ -45,6 +45,24 @@ DATABASE_URL=sqlite:///db.sqlite3
 
 `seed_groups` creates the four application roles: Fleet Manager, Driver, Safety Officer, and Financial Analyst.
 
+To load a realistic local demo dataset with users, vehicles, drivers, trips, maintenance, fuel, and expenses, run:
+
+```bash
+python manage.py seed_demo_data
+```
+
+The command creates these development-only login accounts and resets them to the same password each time:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@transitops.local` | `DemoPass2026!` |
+| Fleet Manager | `manager@transitops.local` | `DemoPass2026!` |
+| Driver | `driver@transitops.local` | `DemoPass2026!` |
+| Safety Officer | `safety@transitops.local` | `DemoPass2026!` |
+| Financial Analyst | `finance@transitops.local` | `DemoPass2026!` |
+
+Django stores only hashed passwords, so you cannot view a user's original password later. For demo accounts, re-run `python manage.py seed_demo_data`, pass a new known password with `--password`, or reset one account with `python manage.py changepassword <email>`.
+
 ### 3. Run the application
 
 Activate the virtualenv created by the setup script before running Django commands:
