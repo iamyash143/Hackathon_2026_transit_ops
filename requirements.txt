@@ -1,0 +1,4 @@
+django>=5.1
+django-crispy-forms
+crispy-tailwind
+django-fsm-2

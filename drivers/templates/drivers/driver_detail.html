@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Driver Detail — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Driver: {{ driver.name }}</h1>
+    <div class="flex gap-2">
+      {% if request.user.role == 'Safety Officer' %}
+        <a href="{% url 'drivers:driver_update' driver.pk %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+          Edit
+        </a>
+        {% if driver.status != 'Suspended' %}
+          <form action="{% url 'drivers:driver_suspend' driver.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+              Suspend
+            </button>
+          </form>
+        {% else %}
+          <form action="{% url 'drivers:driver_reinstate' driver.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5">
+              Reinstate
+            </button>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  {% if driver.license_is_expired %}
+    <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <span class="font-medium">Danger alert!</span> This driver's license has expired.
+    </div>
+  {% elif driver.license_expiring_soon %}
+    <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+      <span class="font-medium">Warning!</span> This driver's license will expire within 30 days.
+    </div>
+  {% endif %}
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-gray-800">
+    <div class="px-4 py-5 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Profile</h3>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700">
+      <dl>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">License Number</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.license_number }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Category</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.license_category }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">License Expiry</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.license_expiry }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Contact Number</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.contact_number }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Safety Score</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.safety_score }} / 100</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ driver.status }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}
