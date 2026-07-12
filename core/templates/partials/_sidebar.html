@@ -5,7 +5,10 @@
       <li><a href="{% url 'dashboard' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Dashboard</a></li>
       {% if user_role == 'Fleet Manager' or user_role == 'Driver' %}
         <li><a href="{% url 'fleet:vehicle_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Vehicles</a></li>
-        <li><a href="{% url 'trip_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Trips</a></li>
+        <li><a href="{% url 'trips:trip_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Trips</a></li>
+      {% endif %}
+      {% if user_role == 'Fleet Manager' or user_role == 'Safety Officer' or user_role == 'Driver' %}
+        <li><a href="{% url 'documents:document_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Documents</a></li>
       {% endif %}
       {% if user_role == 'Fleet Manager' %}<li><a href="{% url 'maintenance:maintenance_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Maintenance</a></li>{% endif %}
       {% if user_role == 'Safety Officer' %}<li><a href="{% url 'drivers:driver_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Drivers</a></li>{% endif %}

@@ -1,6 +1,8 @@
 """URL configuration for the TransitOps project."""
 
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.http import HttpResponseNotFound
 from django.urls import include, path
 
@@ -13,14 +15,18 @@ def unavailable_feature(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('documents/', include('documents.urls', namespace='documents')),
     path('vehicles/', include('fleet.urls', namespace='fleet')),
     path('', include('accounts.urls')),
     path('dashboard/', core_views.dashboard, name='dashboard'),
     path('drivers/', include('drivers.urls', namespace='drivers')),
     path('finance/', unavailable_feature, name='finance_dashboard'),
-    path('trips/', unavailable_feature, name='trip_list'),
+    path('trips/', include('trips.urls', namespace='trips')),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('reports/', unavailable_feature, name='reports'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler403 = 'accounts.views.permission_denied_view'

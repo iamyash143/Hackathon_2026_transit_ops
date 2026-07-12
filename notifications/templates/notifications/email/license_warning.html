@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+  <body style="font-family: Arial, sans-serif; color: #111827;">
+    <h1 style="font-size: 20px;">License Expiry Warning</h1>
+    <p>{{ driver }} has a license document expiring in <strong>{{ days_remaining }}</strong> days.</p>
+    <p>License number: {{ driver.license_number }}</p>
+    {% if document %}<p>Document: {{ document.title }}<br>Expiry date: {{ document.expiry_date }}</p>{% endif %}
+    <p>Please renew and upload the updated credential in TransitOps.</p>
+  </body>
+</html>

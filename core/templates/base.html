@@ -5,9 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}TransitOps{% endblock %}</title>
+  <script>
+    (function () {
+      const storedTheme = localStorage.getItem("color-theme");
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const useDark = storedTheme === "dark" || (!storedTheme && prefersDark);
+      document.documentElement.classList.toggle("dark", useDark);
+    })();
+  </script>
   <link rel="stylesheet" href="{% static 'dist/output.css' %}">
+  {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-50 antialiased dark:bg-gray-900" hx-boost="true">
+<body class="bg-gray-50 text-gray-900 antialiased transition-colors duration-200 dark:bg-gray-900 dark:text-gray-100" hx-boost="true">
   {% include "partials/_sidebar.html" %}
   <div class="min-h-screen sm:ml-64">
     <nav class="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
@@ -35,9 +44,7 @@
     const toggle = document.getElementById('theme-toggle');
     const darkIcon = document.getElementById('theme-toggle-dark-icon');
     const lightIcon = document.getElementById('theme-toggle-light-icon');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = localStorage.getItem('color-theme') === 'dark' || (!localStorage.getItem('color-theme') && prefersDark);
-    document.documentElement.classList.toggle('dark', isDark);
+    const isDark = document.documentElement.classList.contains('dark');
     darkIcon.classList.toggle('hidden', isDark);
     lightIcon.classList.toggle('hidden', !isDark);
     toggle.addEventListener('click', () => {
@@ -45,6 +52,7 @@
       darkIcon.classList.toggle('hidden', enabled);
       lightIcon.classList.toggle('hidden', !enabled);
       localStorage.setItem('color-theme', enabled ? 'dark' : 'light');
+      window.dispatchEvent(new CustomEvent('transitops:theme-change', { detail: { dark: enabled } }));
     });
   </script>
   {% block extra_scripts %}{% endblock %}
