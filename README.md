@@ -25,10 +25,17 @@ TransitOps is a Django-based smart transport operations platform built for the O
 ```bash
 git clone <repository-url>
 cd Hackathon_2026_transit_ops
-cp .env.example .env
 ```
 
-Update `.env` with a unique `SECRET_KEY` and a database URL. For a simple local SQLite setup, use:
+### 2. Bootstrap the project
+
+Run the setup script once to create the virtualenv, install dependencies, create `.env` if needed, run migrations, and seed the default groups:
+
+```bash
+bash scripts/setup.sh
+```
+
+The script copies `.env.example` to `.env` when the file is missing. Update `.env` with a unique `SECRET_KEY` and a database URL. For a simple local SQLite setup, use:
 
 ```dotenv
 SECRET_KEY=local-development-key
@@ -36,26 +43,15 @@ DEBUG=True
 DATABASE_URL=sqlite:///db.sqlite3
 ```
 
-### 2. Install dependencies
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\\Scripts\\activate
-pip install -r requirements.txt
-npm install
-```
-
-### 3. Prepare the database
-
-```bash
-python manage.py migrate
-python manage.py seed_groups
-python manage.py createsuperuser
-```
-
 `seed_groups` creates the four application roles: Fleet Manager, Driver, Safety Officer, and Financial Analyst.
 
-### 4. Run the application
+### 3. Run the application
+
+Activate the virtualenv created by the setup script before running Django commands:
+
+```bash
+source .venv/bin/activate
+```
 
 In one terminal, compile CSS while developing:
 
@@ -71,6 +67,14 @@ python manage.py runserver
 
 Open <http://127.0.0.1:8000/>.
 
+You can also use the Makefile wrappers:
+
+```bash
+make setup
+make dev
+make clean
+```
+
 ## Common commands
 
 ```bash
@@ -85,6 +89,11 @@ python manage.py check
 
 # Build minified CSS for deployment
 npm run build
+
+# Same setup and cleanup flows through Makefile targets
+make setup
+make dev
+make clean
 
 # Run compliance and maintenance alert checks
 python manage.py send_alerts
