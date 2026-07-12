@@ -1,8 +1,8 @@
 """URL configuration for the TransitOps project."""
 
-from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
 from django.http import HttpResponseNotFound
 from django.urls import include, path
 
@@ -19,8 +19,9 @@ urlpatterns = [
     path('vehicles/', include('fleet.urls', namespace='fleet')),
     path('', include('accounts.urls')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('dashboard/', core_views.dashboard, name='dashboard'),
     path('drivers/', include('drivers.urls', namespace='drivers')),
-    path('finance/', unavailable_feature, name='finance_dashboard'),
+    path('finance/', include('finance.urls', namespace='finance')),
     path('trips/', include('trips.urls', namespace='trips')),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('reports/', include('reports.urls', namespace='reports')),

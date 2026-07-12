@@ -50,29 +50,33 @@ class Trip(models.Model):
             raise ValidationError("Cargo weight must be greater than zero.")
         if self.planned_distance and self.planned_distance <= 0:
             raise ValidationError("Planned distance must be greater than zero.")
-        if self.vehicle_id and self.cargo_weight > self.vehicle.max_load_capacity:
-            raise ValidationError(
-                f"Cargo weight ({self.cargo_weight} kg) exceeds vehicle maximum "
-                f"load capacity ({self.vehicle.max_load_capacity} kg)."
-            )
 
     def save(self, *args, **kwargs):
-        self.full_clean()
+        # django-fsm protects direct status assignment; validating that field
+        # reassigns its value internally and raises on otherwise valid saves.
+        self.full_clean(exclude={"status"})
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("trips:trip_detail", kwargs={"pk": self.pk})
 
-    @transition(field=status, source=TripStatus.DRAFT, target=TripStatus.DISPATCHED)
+    def _cargo_within_capacity(self):
+        return self.cargo_weight <= self.vehicle.max_load_capacity
+
+    def _vehicle_available(self):
+        return self.vehicle.status == VehicleStatus.AVAILABLE
+
+    def _driver_eligible(self):
+        return self.driver.status == DriverStatus.AVAILABLE and not self.driver.license_is_expired
+
+    @transition(
+        field=status,
+        source=TripStatus.DRAFT,
+        target=TripStatus.DISPATCHED,
+        conditions=[_cargo_within_capacity, _vehicle_available, _driver_eligible],
+    )
     def dispatch(self):
         """Dispatch a valid trip and mark the assigned vehicle and driver unavailable."""
-        if self.vehicle.status != VehicleStatus.AVAILABLE:
-            raise ValidationError("Only available vehicles can be dispatched.")
-        if self.driver.status != DriverStatus.AVAILABLE:
-            raise ValidationError("Only available drivers can be dispatched.")
-        if self.driver.license_expiry < timezone.now().date():
-            raise ValidationError("Drivers with expired licenses cannot be dispatched.")
-        self.clean()
         with transaction.atomic():
             self.start_time = timezone.now()
             self.vehicle.dispatch()
@@ -96,6 +100,16 @@ class Trip(models.Model):
             self.driver.return_from_trip()
             self.vehicle.save()
             self.driver.save()
+            if self.fuel_consumed is not None:
+                from finance.models import FuelLog
+
+                FuelLog.objects.create(
+                    vehicle=self.vehicle,
+                    trip=self,
+                    liters=self.fuel_consumed,
+                    cost=getattr(self, "fuel_cost", 0) or 0,
+                    date=timezone.now().date(),
+                )
 
     @transition(field=status, source=TripStatus.DISPATCHED, target=TripStatus.CANCELLED)
     def cancel(self):
