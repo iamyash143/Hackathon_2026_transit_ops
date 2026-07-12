@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'core',
     'drivers',
     'fleet',
-    'finance',
+    'maintenance',
     # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
 ]
 

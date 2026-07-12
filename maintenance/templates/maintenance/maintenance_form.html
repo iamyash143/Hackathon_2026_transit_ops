@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Open Maintenance Record — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Open Maintenance Record</h1>
+    <a href="{% url 'maintenance:maintenance_list' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+      Cancel
+    </a>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}

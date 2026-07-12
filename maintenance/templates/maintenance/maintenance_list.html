@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance Logs — TransitOps{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Maintenance Logs</h1>
+  {% if request.user.role == 'Fleet Manager' %}
+    <a href="{% url 'maintenance:maintenance_create' %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+      Open Maintenance Record
+    </a>
+  {% endif %}
+</div>
+
+<!-- Simple filtering form -->
+<form method="get" class="mb-6 flex gap-4 flex-wrap items-center">
+  <select name="vehicle" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white min-w-[200px]">
+    <option value="">All Vehicles</option>
+    {% for vehicle in vehicles %}
+      <option value="{{ vehicle.pk }}" {% if vehicle_filter == vehicle.pk|stringformat:"i" %}selected{% endif %}>
+        {{ vehicle.registration_number }} ({{ vehicle.name }})
+      </option>
+    {% endfor %}
+  </select>
+
+  <select name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+    <option value="">All Statuses</option>
+    {% for val, label in status_choices %}
+      <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="text-white bg-gray-600 hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-2.5">Filter</button>
+  <a href="{% url 'maintenance:maintenance_list' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">Clear</a>
+</form>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 p-4">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">Vehicle</th>
+        <th scope="col" class="px-6 py-3">Date</th>
+        <th scope="col" class="px-6 py-3">Description</th>
+        <th scope="col" class="px-6 py-3">Status</th>
+        <th scope="col" class="px-6 py-3 text-right">Cost</th>
+        <th scope="col" class="px-6 py-3 text-center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <a href="{% url 'fleet:vehicle_detail' log.vehicle.pk %}" class="text-blue-600 dark:text-blue-500 hover:underline font-bold">
+            {{ log.vehicle.registration_number }}
+          </a>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap">{{ log.date|date:"Y-m-d" }}</td>
+        <td class="px-6 py-4 max-w-xs truncate">{{ log.description }}</td>
+        <td class="px-6 py-4">
+          {% if log.status == 'Open' %}
+            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Open</span>
+          {% else %}
+            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Closed</span>
+          {% endif %}
+        </td>
+        <td class="px-6 py-4 text-right whitespace-nowrap">₹{{ log.cost }}</td>
+        <td class="px-6 py-4 text-center">
+          <a href="{{ log.get_absolute_url }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View Details</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="px-6 py-4 text-center">No maintenance logs found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  {% if is_paginated %}
+  <nav class="flex justify-between items-center pt-4" aria-label="Table navigation">
+    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+      Showing Page <span class="font-semibold text-gray-900 dark:text-white">{{ page_obj.number }}</span> of <span class="font-semibold text-gray-900 dark:text-white">{{ paginator.num_pages }}</span>
+    </span>
+    <ul class="inline-flex items-center -space-x-px">
+      {% if page_obj.has_previous %}
+      <li>
+        <a href="?page={{ page_obj.previous_page_number }}{% if vehicle_filter %}&vehicle={{ vehicle_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+      </li>
+      {% endif %}
+      {% if page_obj.has_next %}
+      <li>
+        <a href="?page={{ page_obj.next_page_number }}{% if vehicle_filter %}&vehicle={{ vehicle_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}" class="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

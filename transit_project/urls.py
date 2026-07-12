@@ -17,9 +17,9 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('dashboard/', core_views.dashboard, name='dashboard'),
     path('drivers/', include('drivers.urls', namespace='drivers')),
-    path('finance/', include('finance.urls', namespace='finance')),
+    path('finance/', unavailable_feature, name='finance_dashboard'),
     path('trips/', unavailable_feature, name='trip_list'),
-    path('maintenance/', unavailable_feature, name='maintenance_list'),
+    path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('reports/', unavailable_feature, name='reports'),
 ]
 
