@@ -1,0 +1,203 @@
+.starter-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  justify-content: space-between;
+  padding: 40px 20px;
+}
+
+.starter-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 13px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-secondary);
+}
+
+.status-dot.checking {
+  background-color: var(--color-warning);
+  box-shadow: 0 0 8px var(--color-warning);
+  animation: pulse-warn 1.5s infinite;
+}
+
+.status-dot.online {
+  background-color: var(--color-success);
+  box-shadow: 0 0 8px var(--color-success);
+  animation: pulse-success 1.5s infinite;
+}
+
+.status-dot.offline {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 8px var(--color-danger);
+}
+
+@keyframes pulse-success {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  55% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+@keyframes pulse-warn {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  55% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.starter-main {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.starter-title {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #ffffff 30%, rgba(255,255,255,0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+
+.starter-subtitle {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.connection-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.connection-card h3 {
+  font-size: 20px;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.connection-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.response-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  min-height: 100px;
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+
+.response-box.status-online {
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.response-box.status-offline {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.success-msg {
+  color: var(--color-success);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.error-msg {
+  color: #EF4444;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.api-msg {
+  color: white;
+  font-weight: 500;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.tip-msg {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 8px;
+}
+
+.json-output {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 8px 12px;
+  border-radius: 4px;
+  color: #A5B4FC;
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 0;
+}
+
+.btn-test {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  text-align: center;
+}
+
+.btn-test:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+.starter-footer {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.starter-footer code {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+}
