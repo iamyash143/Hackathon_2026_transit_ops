@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'notifications',
     # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
     'reports',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -93,7 +94,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'login'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'

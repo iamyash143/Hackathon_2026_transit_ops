@@ -4,7 +4,7 @@ from .forms import EmailLoginForm
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
+        return redirect('dashboard:home')
     form = EmailLoginForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         user = authenticate(
@@ -14,7 +14,7 @@ def login_view(request):
         )
         if user:
             login(request, user)
-            return redirect(request.GET.get('next', 'dashboard'))
+            return redirect(request.GET.get('next', 'dashboard:home'))
         form.add_error(None, 'Invalid email or password.')
     return render(request, 'accounts/login.html', {'form': form})
 

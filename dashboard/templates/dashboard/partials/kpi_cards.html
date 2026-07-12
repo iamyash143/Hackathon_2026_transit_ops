@@ -1,0 +1,40 @@
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <!-- Active Vehicles Card -->
+  <div class="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+    <span class="text-sm text-blue-600 dark:text-blue-400 font-semibold">Active Vehicles</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.active_vehicles }}</h4>
+  </div>
+  <!-- Available Vehicles Card -->
+  <div class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+    <span class="text-sm text-green-600 dark:text-green-400 font-semibold">Available Vehicles</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.available_vehicles }}</h4>
+  </div>
+  <!-- In Maintenance Card -->
+  <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+    <span class="text-sm text-red-600 dark:text-red-400 font-semibold">In Maintenance</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.in_maintenance }}</h4>
+  </div>
+  <!-- Active Trips Card -->
+  <div class="p-4 bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+    <span class="text-sm text-purple-600 dark:text-purple-400 font-semibold">Active Trips</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.active_trips }}</h4>
+  </div>
+  <!-- Pending Trips Card -->
+  <div class="p-4 bg-gray-50 dark:bg-gray-900/20 border border-gray-200 dark:border-gray-800 rounded-lg">
+    <span class="text-sm text-gray-600 dark:text-gray-400 font-semibold">Pending Trips</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.pending_trips }}</h4>
+  </div>
+  <!-- Drivers On Duty Card -->
+  <div class="p-4 bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg">
+    <span class="text-sm text-indigo-600 dark:text-indigo-400 font-semibold">Drivers On Duty</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.drivers_on_duty }}</h4>
+  </div>
+
+  {% if request.user.groups.all.0.name in "Fleet Manager,Financial Analyst" or request.user.is_superuser %}
+  <!-- Utilization Card (Role Restricted) -->
+  <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg col-span-2">
+    <span class="text-sm text-yellow-600 dark:text-yellow-400 font-semibold">Fleet Utilization</span>
+    <h4 class="text-2xl font-bold dark:text-white mt-1">{{ kpis.fleet_utilization }}%</h4>
+  </div>
+  {% endif %}
+</div>

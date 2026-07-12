@@ -9,3 +9,7 @@ class Trip(models.Model):
     destination = models.CharField(max_length=255)
     planned_distance = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.CharField(max_length=20, default='draft')
+    start_time = models.DateTimeField(null=True, blank=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    final_odometer = models.PositiveIntegerField(null=True, blank=True)
+    fuel_consumed = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)

@@ -15,7 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('vehicles/', include('fleet.urls', namespace='fleet')),
     path('', include('accounts.urls')),
-    path('dashboard/', core_views.dashboard, name='dashboard'),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('drivers/', include('drivers.urls', namespace='drivers')),
     path('finance/', unavailable_feature, name='finance_dashboard'),
     path('trips/', unavailable_feature, name='trip_list'),
