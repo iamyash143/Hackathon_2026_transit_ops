@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Vehicle Detail — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Vehicle: {{ vehicle.registration_number }}</h1>
+    <div class="flex gap-2">
+      {% if request.user.role == 'Fleet Manager' %}
+        <a href="{% url 'fleet:vehicle_update' vehicle.pk %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+          Edit
+        </a>
+        {% if vehicle.status != 'Retired' %}
+          <form action="{% url 'fleet:vehicle_retire' vehicle.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+              Retire Vehicle
+            </button>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-gray-800">
+    <div class="px-4 py-5 sm:px-6 flex justify-between">
+      <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Vehicle Profile</h3>
+      <div>
+        {% if vehicle.status == 'Available' %}
+          <span class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">{{ vehicle.status }}</span>
+        {% elif vehicle.status == 'On Trip' %}
+          <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{ vehicle.status }}</span>
+        {% elif vehicle.status == 'In Shop' %}
+          <span class="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">{{ vehicle.status }}</span>
+        {% elif vehicle.status == 'Retired' %}
+          <span class="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{ vehicle.status }}</span>
+        {% else %}
+          {{ vehicle.status }}
+        {% endif %}
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700">
+      <dl>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ vehicle.name }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ vehicle.vehicle_type }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Max Load Capacity</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ vehicle.max_load_capacity }} kg</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Odometer</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ vehicle.odometer }} km</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Acquisition Cost</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">₹{{ vehicle.acquisition_cost }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}
