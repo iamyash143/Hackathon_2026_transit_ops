@@ -1,5 +1,12 @@
 from django.db import models
 from django_fsm import FSMField, transition
+from reports.metrics import (
+    get_vehicle_fuel_cost,
+    get_vehicle_maintenance_cost,
+    get_vehicle_operational_cost,
+    get_vehicle_fuel_efficiency,
+    get_vehicle_roi,
+)
 
 class VehicleStatus(models.TextChoices):
     AVAILABLE = 'Available', 'Available'
@@ -65,3 +72,25 @@ class Vehicle(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('fleet:vehicle_detail', kwargs={'pk': self.pk})
+
+    # ── Phase 3 Cost Calculation Properties ──────────────────────────────────
+
+    @property
+    def fuel_cost(self):
+        return get_vehicle_fuel_cost(self)
+
+    @property
+    def maintenance_cost(self):
+        return get_vehicle_maintenance_cost(self)
+
+    @property
+    def operational_cost(self):
+        return get_vehicle_operational_cost(self)
+
+    @property
+    def fuel_efficiency(self):
+        return get_vehicle_fuel_efficiency(self)
+
+    @property
+    def roi(self):
+        return get_vehicle_roi(self)
