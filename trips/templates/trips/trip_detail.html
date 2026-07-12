@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Detail - TransitOps{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-4xl">
+  <h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Trip {{ trip.trip_id }}</h1>
+  <div class="bg-white shadow dark:bg-gray-800 sm:rounded-lg">
+    <dl class="divide-y divide-gray-200 dark:divide-gray-700">
+      <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Route</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:col-span-2 sm:mt-0">{{ trip.source }} to {{ trip.destination }}</dd>
+      </div>
+      <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Vehicle</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:col-span-2 sm:mt-0">{{ trip.vehicle }}</dd>
+      </div>
+      <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Driver</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:col-span-2 sm:mt-0">{{ trip.driver }}</dd>
+      </div>
+      <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Planned Distance</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:col-span-2 sm:mt-0">{{ trip.planned_distance }} km</dd>
+      </div>
+      <div class="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4">
+        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
+        <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:col-span-2 sm:mt-0">{{ trip.get_status_display }}</dd>
+      </div>
+    </dl>
+  </div>
+</div>
+{% endblock %}

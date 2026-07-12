@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Document - TransitOps{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Upload Document</h1>
+  <div class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {% crispy form %}
+    </form>
+  </div>
+</div>
+{% endblock %}

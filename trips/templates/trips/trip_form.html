@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Trip - TransitOps{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css">
+{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+  <section class="bg-white p-6 shadow dark:bg-gray-800 sm:rounded-lg">
+    <h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Create Trip</h1>
+    <form id="trip-form" method="post">
+      {% csrf_token %}
+      {% crispy form %}
+    </form>
+  </section>
+
+  <section class="overflow-hidden bg-white shadow dark:bg-gray-800 sm:rounded-lg">
+    <div class="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
+      <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Route Map</h2>
+      <p id="route-status" class="mt-1 text-sm text-gray-500 dark:text-gray-400">Search addresses or click the map to set source and destination.</p>
+    </div>
+    <div id="trip-map" class="h-[500px] w-full"></div>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const map = L.map("trip-map").setView([28.6139, 77.2090], 11);
+    const status = document.getElementById("route-status");
+    const distanceInput = document.querySelector("[data-route-distance='true']");
+    const fields = {
+      source: document.querySelector("input[name='source']"),
+      sourceLat: document.querySelector("input[name='source_lat']"),
+      sourceLng: document.querySelector("input[name='source_lng']"),
+      destination: document.querySelector("input[name='destination']"),
+      destinationLat: document.querySelector("input[name='destination_lat']"),
+      destinationLng: document.querySelector("input[name='destination_lng']")
+    };
+    let sourceMarker = null;
+    let destinationMarker = null;
+    let routingControl = null;
+    let nextPoint = "source";
+    let geocodeTimer = null;
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    function setStatus(message) {
+      status.textContent = message;
+    }
+
+    function placeMarker(kind, latLng, label) {
+      const marker = L.marker(latLng, { draggable: true }).addTo(map).bindPopup(label);
+      marker.on("dragend", () => {
+        const position = marker.getLatLng();
+        updatePoint(kind, position.lat, position.lng, false);
+      });
+      if (kind === "source") {
+        if (sourceMarker) map.removeLayer(sourceMarker);
+        sourceMarker = marker;
+      } else {
+        if (destinationMarker) map.removeLayer(destinationMarker);
+        destinationMarker = marker;
+      }
+    }
+
+    function updatePoint(kind, lat, lng, shouldPlaceMarker = true) {
+      if (kind === "source") {
+        fields.sourceLat.value = lat.toFixed(6);
+        fields.sourceLng.value = lng.toFixed(6);
+      } else {
+        fields.destinationLat.value = lat.toFixed(6);
+        fields.destinationLng.value = lng.toFixed(6);
+      }
+      if (shouldPlaceMarker) {
+        placeMarker(kind, [lat, lng], kind === "source" ? "Source" : "Destination");
+      }
+      calculateRoute();
+    }
+
+    function calculateRoute() {
+      const sourceReady = fields.sourceLat.value && fields.sourceLng.value;
+      const destinationReady = fields.destinationLat.value && fields.destinationLng.value;
+      if (!sourceReady || !destinationReady) return;
+      if (routingControl) map.removeControl(routingControl);
+      setStatus("Calculating route distance...");
+      routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(Number(fields.sourceLat.value), Number(fields.sourceLng.value)),
+          L.latLng(Number(fields.destinationLat.value), Number(fields.destinationLng.value))
+        ],
+        router: L.Routing.osrmv1({ serviceUrl: "https://router.project-osrm.org/route/v1" }),
+        routeWhileDragging: false,
+        addWaypoints: false,
+        show: false
+      }).on("routesfound", (event) => {
+        const distanceKm = (event.routes[0].summary.totalDistance / 1000).toFixed(2);
+        distanceInput.value = distanceKm;
+        setStatus(`Route distance updated to ${distanceKm} km.`);
+        map.fitBounds(event.routes[0].bounds, { padding: [30, 30] });
+      }).on("routingerror", () => {
+        setStatus("Routing failed. Enter planned distance manually.");
+        distanceInput.removeAttribute("readonly");
+      }).addTo(map);
+    }
+
+    function geocode(kind, query) {
+      if (!query || query.length < 3) return;
+      clearTimeout(geocodeTimer);
+      geocodeTimer = setTimeout(async () => {
+        try {
+          const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+          const response = await fetch(url);
+          const results = await response.json();
+          if (results.length) {
+            updatePoint(kind, Number(results[0].lat), Number(results[0].lon));
+          }
+        } catch (error) {
+          setStatus("Address lookup failed. Click the map or enter distance manually.");
+        }
+      }, 700);
+    }
+
+    fields.source.addEventListener("input", () => geocode("source", fields.source.value));
+    fields.destination.addEventListener("input", () => geocode("destination", fields.destination.value));
+    map.on("click", (event) => {
+      updatePoint(nextPoint, event.latlng.lat, event.latlng.lng);
+      nextPoint = nextPoint === "source" ? "destination" : "source";
+      setStatus(nextPoint === "source" ? "Next click sets source." : "Next click sets destination.");
+    });
+  });
+</script>
+{% endblock %}
