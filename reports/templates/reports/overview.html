@@ -1,68 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard & Reports — TransitOps{% endblock %}
+{% block title %}Operational Reports — TransitOps{% endblock %}
 
 {% block content %}
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Dashboard KPIs</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- KPI Cards -->
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Vehicles</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.active_vehicles }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Available Vehicles</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.available_vehicles }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">In Maintenance</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.in_maintenance }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Trips</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.active_trips }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending Trips</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.pending_trips }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Drivers On Duty</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.drivers_on_duty }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
-            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Fleet Utilization</h3>
-            <p class="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{{ kpis.fleet_utilization }}%</p>
-        </div>
-    </div>
-</div>
+<div class="min-h-screen bg-gray-50 p-6 dark:bg-gray-900">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Operational Reports</h1>
+    <a href="{% url 'reports:export_vehicles_csv' %}?search={{ filters.search|default:'' }}&amp;vehicle_type={{ filters.vehicle_type|default:'' }}" class="rounded bg-green-600 px-4 py-2 font-bold text-white shadow hover:bg-green-700">
+      Download CSV
+    </a>
+  </div>
 
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 p-4">
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Vehicle Operational Costs</h2>
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">Vehicle</th>
-                <th scope="col" class="px-6 py-3">Status</th>
-                <th scope="col" class="px-6 py-3 text-right">Total Fuel Cost (₹)</th>
-                <th scope="col" class="px-6 py-3 text-right">Total Maint. Cost (₹)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for vehicle in vehicles %}
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ vehicle.registration_number }}</td>
-                <td class="px-6 py-4">{{ vehicle.status }}</td>
-                <td class="px-6 py-4 text-right">{{ vehicle.total_fuel_cost|default:"—" }}</td>
-                <td class="px-6 py-4 text-right">{{ vehicle.total_maint_cost|default:"—" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4" class="px-6 py-4 text-center">No vehicles found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
+  <div class="mb-6 flex flex-wrap gap-4 rounded-lg bg-white p-4 shadow dark:bg-gray-800">
+    <input type="text" name="search" placeholder="Search registration or name..." value="{{ filters.search|default:'' }}" hx-get="{% url 'reports:overview' %}" hx-trigger="keyup changed delay:300ms" hx-target="#report-table-body" class="w-64 rounded-md border-gray-300 dark:bg-gray-700 dark:text-white">
+  </div>
+
+  <div class="overflow-hidden rounded-lg bg-white shadow dark:bg-gray-800">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-100 dark:bg-gray-700">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">Vehicle</th>
+          <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+            <a href="?sort={% if current_sort == 'total_cost' %}-total_cost{% else %}total_cost{% endif %}" hx-get="{% url 'reports:overview' %}?sort={% if current_sort == 'total_cost' %}-total_cost{% else %}total_cost{% endif %}" hx-target="#report-table-body" class="hover:text-blue-500">Operational Cost</a>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="report-table-body" class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
+        {% include "reports/partials/vehicle_table.html" %}
+      </tbody>
     </table>
+  </div>
 </div>
 {% endblock %}

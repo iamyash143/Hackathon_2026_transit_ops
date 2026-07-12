@@ -31,9 +31,12 @@ INSTALLED_APPS = [
     'core',
     'drivers',
     'fleet',
+    'finance',
+    'trips',
     'maintenance',
     'notifications',
     # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
+    'reports',
 ]
 
 MIDDLEWARE = [
