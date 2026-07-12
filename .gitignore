@@ -1,0 +1,14 @@
+.env
+.DS_Store
+.idea/
+__pycache__/
+*.py[cod]
+*.sqlite3
+node_modules/
+staticfiles/
+
+# Accidental duplicate copies created by Finder/editor operations.
+* 2.py
+* 3.py
+* 2.txt
+* 3.txt
