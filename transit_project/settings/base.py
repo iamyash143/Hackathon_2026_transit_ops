@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     # feature apps added by other developers:
     # 'fleet', 'drivers', 'trips', 'maintenance', 'finance', 'reports'
     # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
+    'anymail',
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -117,3 +119,22 @@ CRISPY_TEMPLATE_PACK = 'tailwind'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# --- Anymail (Email) ---
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+ANYMAIL = {
+    'SENDGRID_API_KEY': env('SENDGRID_API_KEY', default=''),
+}
+DEFAULT_FROM_EMAIL = 'transitops@yourdomain.com'
+
+# --- Twilio (SMS — optional) ---
+TWILIO_ACCOUNT_SID = env('TWILIO_ACCOUNT_SID', default='')
+TWILIO_AUTH_TOKEN  = env('TWILIO_AUTH_TOKEN', default='')
+TWILIO_FROM_NUMBER = env('TWILIO_FROM_NUMBER', default='')
+
+# --- Notification thresholds ---
+LICENSE_WARN_DAYS          = 30
+LICENSE_CRITICAL_DAYS      = 7
+MAINTENANCE_KM_THRESHOLD   = 15000
+MAINTENANCE_OVERDUE_DAYS   = 7
+
