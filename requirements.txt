@@ -38,7 +38,6 @@ packaging==26.2
 pillow==12.3.0
 prompt_toolkit==3.0.52
 propcache==0.5.2
-psycopg2-binary==2.9.10
 pycparser==3.0
 pydyf==0.12.1
 PyJWT==2.13.0

@@ -84,7 +84,7 @@ class Command(BaseCommand):
     def _check_maintenance_due(self):
         threshold = settings.MAINTENANCE_KM_THRESHOLD
 
-        for vehicle in Vehicle.objects.exclude(status__in=["Retired", "In Shop"]):
+        for vehicle in Vehicle.objects.exclude(status__in=["retired", "in_shop"]):
             last_log = MaintenanceLog.objects.filter(
                 vehicle=vehicle, status="closed"
             ).order_by("-date").first()

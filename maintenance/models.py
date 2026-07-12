@@ -4,8 +4,8 @@ from django.dispatch import receiver
 from fleet.models import Vehicle, VehicleStatus
 
 class MaintenanceStatus(models.TextChoices):
-    OPEN   = 'Open',   'Open'
-    CLOSED = 'Closed', 'Closed'
+    OPEN   = 'open',   'Open'
+    CLOSED = 'closed', 'Closed'
 
 class MaintenanceLog(models.Model):
     vehicle     = models.ForeignKey(Vehicle, on_delete=models.PROTECT,

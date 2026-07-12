@@ -9,10 +9,10 @@ from reports.metrics import (
 )
 
 class VehicleStatus(models.TextChoices):
-    AVAILABLE = 'Available', 'Available'
-    ON_TRIP   = 'On Trip',   'On Trip'
-    IN_SHOP   = 'In Shop',   'In Shop'
-    RETIRED   = 'Retired',   'Retired'
+    AVAILABLE = 'available', 'Available'
+    ON_TRIP   = 'on_trip',   'On Trip'
+    IN_SHOP   = 'in_shop',   'In Shop'
+    RETIRED   = 'retired',   'Retired'
 
 class Vehicle(models.Model):
     registration_number = models.CharField(max_length=20, unique=True, db_index=True)

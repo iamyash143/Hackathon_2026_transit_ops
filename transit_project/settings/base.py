@@ -79,9 +79,12 @@ WSGI_APPLICATION = 'transit_project.wsgi.application'
 
 
 # Database
-# Reads DATABASE_URL from .env or falls back to sqlite3
+# Always use sqlite3 for local development to ensure it works everywhere out of the box
 DATABASES = {
-    'default': env.db(default=f"sqlite:///{BASE_DIR}/db.sqlite3")
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 

@@ -6,10 +6,10 @@ from fleet.models import Vehicle
 from drivers.models import Driver
 
 class TripStatus(models.TextChoices):
-    DRAFT      = 'Draft',      'Draft'
-    DISPATCHED = 'Dispatched', 'Dispatched'
-    COMPLETED  = 'Completed',  'Completed'
-    CANCELLED  = 'Cancelled',  'Cancelled'
+    DRAFT      = 'draft',      'Draft'
+    DISPATCHED = 'dispatched', 'Dispatched'
+    COMPLETED  = 'completed',  'Completed'
+    CANCELLED  = 'cancelled',  'Cancelled'
 
 class Trip(models.Model):
     trip_id         = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, db_index=True)
