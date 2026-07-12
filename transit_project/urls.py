@@ -30,7 +30,7 @@ urlpatterns = [
     path('trips/', unavailable_feature, name='trip_list'),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('drivers/', include('drivers.urls', namespace='drivers')),
-    path('finance/', unavailable_feature, name='finance_dashboard'),
+    path('finance/', include('finance.urls', namespace='finance')),
     path('reports/', unavailable_feature, name='reports'),
 ]
 

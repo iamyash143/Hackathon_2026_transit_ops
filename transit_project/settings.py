@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django_fsm',
     'maintenance',
     'drivers',
+    'finance',
 ]
 
 MIDDLEWARE = [
