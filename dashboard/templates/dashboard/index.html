@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 space-y-6">
+  <!-- Filters Bar -->
+  <form hx-get="{% url 'dashboard:home' %}" hx-target="#kpi-section" hx-trigger="change" class="flex flex-wrap gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Vehicle Type</label>
+      <select name="vehicle_type" class="mt-1 block rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:text-white">
+        <option value="">All Types</option>
+        <option value="heavy_truck" {% if filters.vehicle_type == "heavy_truck" %}selected{% endif %}>Heavy Truck</option>
+        <option value="cargo_van" {% if filters.vehicle_type == "cargo_van" %}selected{% endif %}>Cargo Van</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Vehicle Status</label>
+      <select name="status" class="mt-1 block rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:text-white">
+        <option value="">All Statuses</option>
+        <option value="Available" {% if filters.status == "Available" %}selected{% endif %}>Available</option>
+        <option value="On Trip" {% if filters.status == "On Trip" %}selected{% endif %}>On Trip</option>
+        <option value="In Shop" {% if filters.status == "In Shop" %}selected{% endif %}>In Shop</option>
+        <option value="Retired" {% if filters.status == "Retired" %}selected{% endif %}>Retired</option>
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Region</label>
+      <select name="region" class="mt-1 block rounded-md border-gray-300 shadow-sm dark:bg-gray-700 dark:text-white">
+        <option value="">All Regions</option>
+        <option value="north" {% if filters.region == "north" %}selected{% endif %}>North</option>
+        <option value="south" {% if filters.region == "south" %}selected{% endif %}>South</option>
+      </select>
+    </div>
+  </form>
+
+  <!-- KPI Section (Swapped by HTMX) -->
+  <div id="kpi-section" hx-get="{% url 'dashboard:home' %}" hx-trigger="every 30s" hx-target="this">
+    {% include "dashboard/partials/kpi_cards.html" %}
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Vehicle Status Distribution</h3>
+      <div class="relative h-64">
+        <canvas id="statusChart" data-chart-labels='{{ chart_data.labels|safe }}' data-chart-values='{{ chart_data.data|safe }}'></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    const labels = JSON.parse(document.getElementById('statusChart').getAttribute('data-chart-labels'));
+    const data = JSON.parse(document.getElementById('statusChart').getAttribute('data-chart-values'));
+
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: ['#10B981', '#3B82F6', '#F59E0B', '#EF4444'],
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  });
+</script>
+{% endblock %}
