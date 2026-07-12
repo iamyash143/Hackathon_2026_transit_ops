@@ -62,6 +62,7 @@ def maintenance_close(request, pk):
             with transaction.atomic():
                 log.cost           = form.cleaned_data['final_cost']
                 log.retire_on_close = form.cleaned_data['retire_on_close']
+                log.odometer_at_service = log.vehicle.odometer
                 log.status         = MaintenanceStatus.CLOSED
                 log.save()          # post_save signal handles vehicle FSM
             messages.success(request, 'Maintenance record closed.')
