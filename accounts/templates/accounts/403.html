@@ -1,0 +1,17 @@
+{% extends "base_auth.html" %}
+
+{% block content %}
+<div class="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+  <div class="w-full max-w-md p-8 bg-white rounded-xl shadow dark:bg-gray-800 text-center">
+    <h1 class="text-4xl font-bold text-red-600 mb-4">403</h1>
+    <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Permission Denied</h2>
+    <p class="text-gray-600 dark:text-gray-300 mb-6">
+      Your current role {% if request.user.is_authenticated %}({{ request.user.role|default:"None" }}){% endif %} does not have permission to access this page.
+    </p>
+    <a href="javascript:history.back()"
+       class="inline-block text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+      Go Back
+    </a>
+  </div>
+</div>
+{% endblock %}

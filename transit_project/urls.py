@@ -15,8 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.http import HttpResponse
+
+def dummy_dashboard(request):
+    return HttpResponse("Dashboard")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('accounts.urls')),
+    path('dashboard/', dummy_dashboard, name='dashboard'),
 ]
+
+handler403 = 'accounts.views.permission_denied_view'
