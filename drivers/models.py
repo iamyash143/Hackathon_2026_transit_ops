@@ -3,10 +3,10 @@ from django.utils import timezone
 from django_fsm import FSMField, transition
 
 class DriverStatus(models.TextChoices):
-    AVAILABLE  = 'Available',  'Available'
-    ON_TRIP    = 'On Trip',    'On Trip'
-    OFF_DUTY   = 'Off Duty',   'Off Duty'
-    SUSPENDED  = 'Suspended',  'Suspended'
+    AVAILABLE  = 'available',  'Available'
+    ON_TRIP    = 'on_trip',    'On Trip'
+    OFF_DUTY   = 'off_duty',   'Off Duty'
+    SUSPENDED  = 'suspended',  'Suspended'
 
 class Driver(models.Model):
     name            = models.CharField(max_length=100)

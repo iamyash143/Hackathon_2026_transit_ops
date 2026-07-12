@@ -2,7 +2,7 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, Submit
 from fleet.models import Vehicle, VehicleStatus
-from .models import MaintenanceLog
+from .models import MaintenanceLog, MaintenanceStatus
 
 class MaintenanceCreateForm(forms.ModelForm):
     class Meta:
@@ -38,7 +38,7 @@ class MaintenanceCreateForm(forms.ModelForm):
             return vehicle
 
         open_log_exists = MaintenanceLog.objects.filter(
-            vehicle=vehicle, status='Open'
+            vehicle=vehicle, status=MaintenanceStatus.OPEN
         ).exists()
         if open_log_exists:
             raise forms.ValidationError(

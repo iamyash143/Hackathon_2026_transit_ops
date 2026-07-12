@@ -90,7 +90,7 @@ def get_fleet_utilization() -> Decimal:
     )
 
     from fleet.models import Vehicle
-    vehicle_count = Vehicle.objects.exclude(status="Retired").count()
+    vehicle_count = Vehicle.objects.exclude(status="retired").count()
 
     if vehicle_count == 0:
         return Decimal("0.00")
@@ -117,11 +117,11 @@ def get_dashboard_kpis() -> dict:
     vehicles = Vehicle.objects.all()
 
     return {
-        "active_vehicles":      vehicles.filter(status="On Trip").count(),
-        "available_vehicles":   vehicles.filter(status="Available").count(),
-        "in_maintenance":       vehicles.filter(status="In Shop").count(),
+        "active_vehicles":      vehicles.filter(status="on_trip").count(),
+        "available_vehicles":   vehicles.filter(status="available").count(),
+        "in_maintenance":       vehicles.filter(status="in_shop").count(),
         "active_trips":         Trip.objects.filter(status="dispatched").count(),
         "pending_trips":        Trip.objects.filter(status="draft").count(),
-        "drivers_on_duty":      Driver.objects.filter(status="On Trip").count(),
+        "drivers_on_duty":      Driver.objects.filter(status="on_trip").count(),
         "fleet_utilization":    get_fleet_utilization(),
     }
