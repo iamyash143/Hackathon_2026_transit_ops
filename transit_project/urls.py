@@ -27,7 +27,7 @@ urlpatterns = [
     path('vehicles/', include('fleet.urls', namespace='fleet')),
     path('', include('accounts.urls')),
     path('dashboard/', core_views.dashboard, name='dashboard'),
-    path('trips/', unavailable_feature, name='trip_list'),
+    path('trips/', include('trips.urls', namespace='trips')),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
     path('drivers/', include('drivers.urls', namespace='drivers')),
     path('finance/', include('finance.urls', namespace='finance')),

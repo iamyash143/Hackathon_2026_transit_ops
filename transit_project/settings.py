@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'maintenance',
     'drivers',
     'finance',
+    'trips',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Detail — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Trip Detail</h1>
+    <div class="flex gap-2">
+      <a href="{% url 'trips:trip_list' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+        Back to List
+      </a>
+      
+      {% if trip.status == 'Draft' %}
+        {% if request.user.role == 'Fleet Manager' or request.user.role == 'Driver' %}
+          <form action="{% url 'trips:trip_dispatch' trip.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+              Dispatch Trip
+            </button>
+          </form>
+        {% endif %}
+      {% elif trip.status == 'Dispatched' %}
+        {% if request.user.role == 'Fleet Manager' or request.user.role == 'Driver' %}
+          <a href="{% url 'trips:trip_complete' trip.pk %}" class="text-white bg-green-600 hover:bg-green-700 font-medium rounded-lg text-sm px-5 py-2.5">
+            Complete Trip
+          </a>
+        {% endif %}
+        {% if request.user.role == 'Fleet Manager' %}
+          <form action="{% url 'trips:trip_cancel' trip.pk %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+              Cancel Trip
+            </button>
+          </form>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-gray-800">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Route: {{ trip.source }} &rarr; {{ trip.destination }}</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">ID: {{ trip.trip_id }}</p>
+      </div>
+      <div>
+        {% if trip.status == 'Draft' %}
+          <span class="bg-gray-100 text-gray-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">Draft</span>
+        {% elif trip.status == 'Dispatched' %}
+          <span class="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">Dispatched</span>
+        {% elif trip.status == 'Completed' %}
+          <span class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Completed</span>
+        {% elif trip.status == 'Cancelled' %}
+          <span class="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Cancelled</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700">
+      <dl>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Vehicle</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+            <a href="{% url 'fleet:vehicle_detail' trip.vehicle.pk %}" class="text-blue-600 dark:text-blue-500 hover:underline font-semibold">
+              {{ trip.vehicle.registration_number }} ({{ trip.vehicle.name }})
+            </a>
+            <span class="text-xs text-gray-400 ml-2">(Current odometer: {{ trip.vehicle.odometer }} km)</span>
+          </dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Driver</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+            <a href="{% url 'drivers:driver_detail' trip.driver.pk %}" class="text-blue-600 dark:text-blue-500 hover:underline font-semibold">
+              {{ trip.driver.name }}
+            </a>
+          </dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Cargo Weight</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.cargo_weight }} kg</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Planned Distance</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.planned_distance }} km</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.created_at|date:"Y-m-d H:i:s" }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Start Time</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.start_time|default:"—"|date:"Y-m-d H:i:s" }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">End Time</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.end_time|default:"—"|date:"Y-m-d H:i:s" }}</dd>
+        </div>
+        
+        {% if trip.status == 'Completed' %}
+          <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Final Odometer</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.final_odometer }} km</dd>
+          </div>
+          <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Fuel Consumed</dt>
+            <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ trip.fuel_consumed }} Liters</dd>
+          </div>
+        {% endif %}
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}
