@@ -20,7 +20,7 @@ urlpatterns = [
     path('finance/', unavailable_feature, name='finance_dashboard'),
     path('trips/', unavailable_feature, name='trip_list'),
     path('maintenance/', include('maintenance.urls', namespace='maintenance')),
-    path('reports/', unavailable_feature, name='reports'),
+    path('reports/', include('reports.urls', namespace='reports')),
 ]
 
 handler403 = 'accounts.views.permission_denied_view'

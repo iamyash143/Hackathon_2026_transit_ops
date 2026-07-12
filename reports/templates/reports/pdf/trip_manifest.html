@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-size: 9pt;
+      }
+    }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      color: #333;
+      line-height: 1.5;
+    }
+    .header {
+      border-bottom: 2px solid #3B82F6;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .title {
+      font-size: 24pt;
+      font-weight: bold;
+      color: #1E3A8A;
+    }
+    .grid {
+      display: table;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .row {
+      display: table-row;
+    }
+    .col {
+      display: table-cell;
+      padding: 8px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    .label {
+      font-weight: bold;
+      color: #4B5563;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="title">TransitOps Trip Manifest</div>
+    <div>Generated: {% now "Y-m-d H:i" %}</div>
+  </div>
+
+  <div class="grid">
+    <div class="row">
+      <div class="col label">Trip ID:</div>
+      <div class="col">{{ trip.pk }}</div>
+    </div>
+    <div class="row">
+      <div class="col label">Vehicle:</div>
+      <div class="col">{{ trip.vehicle.registration_number }} ({{ trip.vehicle.name }})</div>
+    </div>
+    <div class="row">
+      <div class="col label">Driver:</div>
+      <div class="col">Driver {{ trip.driver.id }}</div>
+    </div>
+    <div class="row">
+      <div class="col label">Source Location:</div>
+      <div class="col">{{ trip.source }}</div>
+    </div>
+    <div class="row">
+      <div class="col label">Destination Location:</div>
+      <div class="col">{{ trip.destination }}</div>
+    </div>
+    <div class="row">
+      <div class="col label">Planned Distance:</div>
+      <div class="col">{{ trip.planned_distance }} km</div>
+    </div>
+  </div>
+</body>
+</html>

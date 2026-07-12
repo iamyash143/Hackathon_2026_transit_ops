@@ -62,3 +62,4 @@ weasyprint==69.0
 webencodings==0.5.1
 yarl==1.24.2
 zopfli==0.4.3
+weasyprint

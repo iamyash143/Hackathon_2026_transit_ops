@@ -27,11 +27,10 @@ INSTALLED_APPS = [
     'django_fsm',
     'admincharts',
     'accounts',
-    'core',
-    'drivers',
-    'fleet',
-    'maintenance',
+    # feature apps added by other developers:
+    # 'fleet', 'drivers', 'trips', 'maintenance', 'finance', 'reports'
     # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
+    'reports',
 ]
 
 MIDDLEWARE = [

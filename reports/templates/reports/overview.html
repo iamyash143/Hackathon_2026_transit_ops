@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Operational Reports</h1>
+    <a href="{% url 'reports:export_vehicles_csv' %}?search={{ filters.search|default:'' }}&vehicle_type={{ filters.vehicle_type|default:'' }}" 
+       class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow">
+      Download CSV
+    </a>
+  </div>
+
+  <!-- Search & Filters -->
+  <div class="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow flex flex-wrap gap-4">
+    <input type="text" name="search" placeholder="Search registration or name..." 
+           value="{{ filters.search|default:'' }}"
+           hx-get="{% url 'reports:overview' %}" 
+           hx-trigger="keyup changed delay:300ms" 
+           hx-target="#report-table-body" 
+           class="rounded-md border-gray-300 dark:bg-gray-700 dark:text-white w-64">
+  </div>
+
+  <!-- Data Table -->
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="bg-gray-100 dark:bg-gray-700">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Vehicle
+          </th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <a href="?sort={% if current_sort == 'total_cost' %}-total_cost{% else %}total_cost{% endif %}" hx-get="{% url 'reports:overview' %}?sort={% if current_sort == 'total_cost' %}-total_cost{% else %}total_cost{% endif %}" hx-target="#report-table-body" class="hover:text-blue-500">
+              Operational Cost
+            </a>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="report-table-body" class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+        {% include "reports/partials/vehicle_table.html" %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
