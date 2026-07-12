@@ -8,7 +8,7 @@
         <li><a href="{% url 'trip_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Trips</a></li>
       {% endif %}
       {% if user_role == 'Fleet Manager' %}<li><a href="{% url 'maintenance_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Maintenance</a></li>{% endif %}
-      {% if user_role == 'Safety Officer' %}<li><a href="{% url 'driver_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Drivers</a></li>{% endif %}
+      {% if user_role == 'Safety Officer' %}<li><a href="{% url 'drivers:driver_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Drivers</a></li>{% endif %}
       {% if user_role == 'Financial Analyst' %}
         <li><a href="{% url 'finance_dashboard' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Finance</a></li>
         <li><a href="{% url 'reports' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Reports</a></li>
