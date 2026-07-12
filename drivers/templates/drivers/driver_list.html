@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Drivers — TransitOps{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Drivers</h1>
+  {% if request.user.role == 'Safety Officer' %}
+    <a href="{% url 'drivers:driver_create' %}" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5">
+      Add Driver
+    </a>
+  {% endif %}
+</div>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 p-4">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-6 py-3">Name</th>
+        <th scope="col" class="px-6 py-3">License #</th>
+        <th scope="col" class="px-6 py-3">Category</th>
+        <th scope="col" class="px-6 py-3">Expiry</th>
+        <th scope="col" class="px-6 py-3">Safety Score</th>
+        <th scope="col" class="px-6 py-3">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for driver in drivers %}
+      <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+          <a href="{{ driver.get_absolute_url }}" class="text-blue-600 dark:text-blue-500 hover:underline">
+            {{ driver.name }}
+          </a>
+        </td>
+        <td class="px-6 py-4">{{ driver.license_number }}</td>
+        <td class="px-6 py-4">{{ driver.license_category }}</td>
+        <td class="px-6 py-4">
+          {% if driver.license_is_expired %}
+            <span class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+              Expired ({{ driver.license_expiry }})
+            </span>
+          {% elif driver.license_expiring_soon %}
+            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+              Expiring Soon ({{ driver.license_expiry }})
+            </span>
+          {% else %}
+            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+              Valid ({{ driver.license_expiry }})
+            </span>
+          {% endif %}
+        </td>
+        <td class="px-6 py-4">{{ driver.safety_score }}</td>
+        <td class="px-6 py-4">{{ driver.status }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="px-6 py-4 text-center">No drivers found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Trip — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Create Trip</h1>
+    <a href="{% url 'trips:trip_list' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+      Cancel
+    </a>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-300 border border-blue-300 dark:border-blue-800" role="alert">
+      <span class="font-medium">ℹ️ Asset Dispatch Availability Notice:</span> Only <strong>Available</strong> vehicles and drivers with a valid, non-expired license are displayed in the select dropdowns.
+    </div>
+
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}

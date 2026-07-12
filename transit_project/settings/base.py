@@ -12,9 +12,10 @@ env = environ.Env(
 # Read .env file from BASE_DIR
 environ.Env.read_env(env_file=str(BASE_DIR / '.env'))
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+SECRET_KEY = env('SECRET_KEY', default='django-insecure-29v01p&47x96-0+m3102x9gqe1t03)f%h-8ub1mlnt$a@4w$wx')
+DEBUG = env('DEBUG', default=True)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+
 
 # Application definition
 
@@ -35,9 +36,12 @@ INSTALLED_APPS = [
     # local
     'accounts',
     'core',
-    # feature apps added by other developers:
-    # 'fleet', 'drivers', 'trips', 'maintenance', 'finance', 'reports'
-    # Map integrations ('djgeojson', 'leaflet') are registered in Phase 5.
+    'fleet',
+    'drivers',
+    'trips',
+    'maintenance',
+    'finance',
+    'reports',
     'anymail',
     'notifications',
 ]
@@ -75,9 +79,9 @@ WSGI_APPLICATION = 'transit_project.wsgi.application'
 
 
 # Database
-# Reads DATABASE_URL from .env
+# Reads DATABASE_URL from .env or falls back to sqlite3
 DATABASES = {
-    'default': env.db()
+    'default': env.db(default=f"sqlite:///{BASE_DIR}/db.sqlite3")
 }
 
 
@@ -127,7 +131,7 @@ ANYMAIL = {
 }
 DEFAULT_FROM_EMAIL = 'transitops@yourdomain.com'
 
-# --- Twilio (SMS — optional) ---
+# --- Twilio (SMS - optional) ---
 TWILIO_ACCOUNT_SID = env('TWILIO_ACCOUNT_SID', default='')
 TWILIO_AUTH_TOKEN  = env('TWILIO_AUTH_TOKEN', default='')
 TWILIO_FROM_NUMBER = env('TWILIO_FROM_NUMBER', default='')
@@ -137,4 +141,3 @@ LICENSE_WARN_DAYS          = 30
 LICENSE_CRITICAL_DAYS      = 7
 MAINTENANCE_KM_THRESHOLD   = 15000
 MAINTENANCE_OVERDUE_DAYS   = 7
-

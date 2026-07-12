@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Complete Trip — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Complete Trip</h1>
+    <a href="{% url 'trips:trip_detail' trip.pk %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+      Cancel
+    </a>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow dark:bg-gray-800">
+    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-300 border border-blue-300 dark:border-blue-800" role="alert">
+      <p><strong>Vehicle:</strong> {{ trip.vehicle.registration_number }} ({{ trip.vehicle.name }})</p>
+      <p><strong>Starting Odometer:</strong> {{ trip.vehicle.odometer }} km</p>
+      <p class="text-xs text-gray-400 mt-1">Please enter a final odometer value greater than {{ trip.vehicle.odometer }} km.</p>
+    </div>
+
+    {% crispy form %}
+  </div>
+</div>
+{% endblock %}

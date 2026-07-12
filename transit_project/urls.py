@@ -24,13 +24,13 @@ def unavailable_feature(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('vehicles/', include('fleet.urls', namespace='fleet')),
     path('', include('accounts.urls')),
     path('dashboard/', core_views.dashboard, name='dashboard'),
-    path('vehicles/', unavailable_feature, name='vehicle_list'),
-    path('trips/', unavailable_feature, name='trip_list'),
-    path('maintenance/', unavailable_feature, name='maintenance_list'),
-    path('drivers/', unavailable_feature, name='driver_list'),
-    path('finance/', unavailable_feature, name='finance_dashboard'),
+    path('trips/', include('trips.urls', namespace='trips')),
+    path('maintenance/', include('maintenance.urls', namespace='maintenance')),
+    path('drivers/', include('drivers.urls', namespace='drivers')),
+    path('finance/', include('finance.urls', namespace='finance')),
     path('reports/', unavailable_feature, name='reports'),
 ]
 

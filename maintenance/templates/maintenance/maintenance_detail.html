@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance Log Detail — TransitOps{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Maintenance Log Detail</h1>
+    <div class="flex gap-2">
+      <a href="{% url 'maintenance:maintenance_list' %}" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700">
+        Back to List
+      </a>
+      {% if request.user.role == 'Fleet Manager' and log.status == 'Open' %}
+        <a href="{% url 'maintenance:maintenance_close' log.pk %}" class="text-white bg-red-600 hover:bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5">
+          Close Maintenance Record
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg dark:bg-gray-800">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">Log Information</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Details of maintenance log #{{ log.pk }}</p>
+      </div>
+      <div>
+        {% if log.status == 'Open' %}
+          <span class="bg-yellow-100 text-yellow-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Open</span>
+        {% else %}
+          <span class="bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Closed</span>
+        {% endif %}
+      </div>
+    </div>
+    <div class="border-t border-gray-200 dark:border-gray-700">
+      <dl>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Vehicle</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+            <a href="{% url 'fleet:vehicle_detail' log.vehicle.pk %}" class="text-blue-600 dark:text-blue-500 hover:underline font-semibold">
+              {{ log.vehicle.registration_number }} ({{ log.vehicle.name }})
+            </a>
+          </dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Date Logged</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ log.date|date:"Y-m-d" }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2 whitespace-pre-line">{{ log.description }}</dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Cost</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">₹{{ log.cost }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Retired vehicle on close?</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">
+            {% if log.retire_on_close %}
+              <span class="text-red-600 dark:text-red-400 font-semibold">Yes</span>
+            {% else %}
+              <span class="text-gray-500 dark:text-gray-400">No</span>
+            {% endif %}
+          </dd>
+        </div>
+        <div class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ log.created_at|date:"Y-m-d H:i:s" }}</dd>
+        </div>
+        <div class="bg-gray-50 dark:bg-gray-900 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</dt>
+          <dd class="mt-1 text-sm text-gray-900 dark:text-white sm:mt-0 sm:col-span-2">{{ log.updated_at|date:"Y-m-d H:i:s" }}</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>
+{% endblock %}
