@@ -15,16 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from django.http import HttpResponse
+from django.urls import include, path
+from django.http import HttpResponseNotFound
+from core import views as core_views
 
-def dummy_dashboard(request):
-    return HttpResponse("Dashboard")
+def unavailable_feature(request):
+    return HttpResponseNotFound('This feature is not available yet.')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
-    path('dashboard/', dummy_dashboard, name='dashboard'),
+    path('dashboard/', core_views.dashboard, name='dashboard'),
+    path('vehicles/', unavailable_feature, name='vehicle_list'),
+    path('trips/', unavailable_feature, name='trip_list'),
+    path('maintenance/', unavailable_feature, name='maintenance_list'),
+    path('drivers/', unavailable_feature, name='driver_list'),
+    path('finance/', unavailable_feature, name='finance_dashboard'),
+    path('reports/', unavailable_feature, name='reports'),
 ]
 
 handler403 = 'accounts.views.permission_denied_view'

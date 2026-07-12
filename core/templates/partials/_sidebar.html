@@ -1,0 +1,18 @@
+<aside class="fixed left-0 top-0 z-40 h-screen w-64 -translate-x-full transition-transform sm:translate-x-0" aria-label="Sidebar">
+  <div class="h-full overflow-y-auto border-r border-gray-200 bg-white px-3 py-4 dark:border-gray-700 dark:bg-gray-800">
+    <a href="{% url 'dashboard' %}" class="mb-6 flex items-center ps-2.5"><span class="self-center text-xl font-bold text-gray-900 dark:text-white">TransitOps</span></a>
+    <ul class="space-y-2 font-medium">
+      <li><a href="{% url 'dashboard' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Dashboard</a></li>
+      {% if user_role == 'Fleet Manager' or user_role == 'Driver' %}
+        <li><a href="{% url 'vehicle_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Vehicles</a></li>
+        <li><a href="{% url 'trip_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Trips</a></li>
+      {% endif %}
+      {% if user_role == 'Fleet Manager' %}<li><a href="{% url 'maintenance_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Maintenance</a></li>{% endif %}
+      {% if user_role == 'Safety Officer' %}<li><a href="{% url 'driver_list' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Drivers</a></li>{% endif %}
+      {% if user_role == 'Financial Analyst' %}
+        <li><a href="{% url 'finance_dashboard' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Finance</a></li>
+        <li><a href="{% url 'reports' %}" class="flex rounded-lg p-2 text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Reports</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</aside>
