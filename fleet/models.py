@@ -15,6 +15,7 @@ class Vehicle(models.Model):
     odometer            = models.PositiveIntegerField(default=0)               # km
     acquisition_cost    = models.DecimalField(max_digits=12, decimal_places=2)
     status              = FSMField(default=VehicleStatus.AVAILABLE, protected=True)
+    maintenance_due     = models.BooleanField(default=False)
     created_at          = models.DateTimeField(auto_now_add=True)
     updated_at          = models.DateTimeField(auto_now=True)
 

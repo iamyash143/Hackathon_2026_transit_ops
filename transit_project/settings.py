@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'core',
     'crispy_forms',
     'crispy_tailwind',
+    'django_fsm',
+    'maintenance',
 ]
 
 MIDDLEWARE = [
